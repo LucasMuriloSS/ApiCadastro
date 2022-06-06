@@ -14,10 +14,12 @@ router.post('/login', async (req,res)=>{
     catch(error){
         console.log(`[POST API login] => `, error)
     }
+    const isValidUser = user?.password === password
     bodyReturn = {
-        logged: user?.password === password,
-        status: user?.password === password ? 'success': 'failed',
-        message: user?.password === password ? '': 'Email or password wrong.',
+        logged: isValidUser,
+        user: isValidUser ? user?._id : '',
+        status: isValidUser ? 'success': 'failed',
+        message: isValidUser ? 'Login successfully': 'Email or password wrong.',
     }
     res.send(bodyReturn)
 })
