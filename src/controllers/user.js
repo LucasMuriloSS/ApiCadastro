@@ -1,30 +1,58 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const jwt = require("jsonwebtoken");
+const fs = require('fs');
+
 
 router.post('/login', async (req,res)=>{
     const {email, password} = req.body
+
     let user = false
     let bodyReturn = {}
+
     try{
         user = await User.findOne({
             email: email
         })
     }
     catch(error){
-        console.log(`[POST API login] => `, error)
+         console.log(`[POST API login] => `, error)
     }
     const isValidUser = user?.password === password
-    bodyReturn = {
-        logged: isValidUser,
-        user: isValidUser ? user?._id : '',
-        status: isValidUser ? 'success': 'failed',
-        message: isValidUser ? 'Login successfully': 'Email or password wrong.',
+
+    if(isValidUser){
+        bodyReturn = {
+            logged: true,
+            status: 'success',
+            message:'Login successfully',
+        }
+
+        try {
+            const secret = 'sdfDFsdfFhSdf23SAFSDgjDasdfasd25632F4523F2F3F44533er45F623rg12FDS34r2FfhGADSF23RFw'
+            const token =  jwt.sign(
+              {
+                id: user._id,
+              },
+              secret
+            );
+            bodyReturn = {...bodyReturn, token: token}
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ msg: error });
+        }
+    }else{
+        bodyReturn = {
+            logged: false,
+            status: 'failed',
+            message:'Email or password wrong.',
+        }
     }
     res.send(bodyReturn)
 })
 
 router.post('/register', async (req,res)=>{
+
     const {email, password} = req.body
     let bodyReturn
     let user

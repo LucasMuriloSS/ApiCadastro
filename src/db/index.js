@@ -1,2 +1,4 @@
 import { connect } from 'mongoose'
-module.exports = connect('mongodb://localhost:27017/forumv8')
+const dbUser = process.env.DB_USER
+const dbPassword = process.env.DB_PASS
+module.exports = connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.5kxocpk.mongodb.net/?retryWrites=true&w=majority`)
