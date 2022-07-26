@@ -8,12 +8,12 @@ const schema = mongoose.Schema({
 	phone: String,
 	mobile: String,
 	image:  Buffer,
+	data: String,
+	notifications:[{
+		postID: String,
+		text: String
+	}]
 	
-
-		
-	
-	
-
 })
 
 module.exports = mongoose.model("User", schema)

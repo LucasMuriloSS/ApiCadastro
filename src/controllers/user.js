@@ -66,7 +66,20 @@ router.post('/register', async (req,res)=>{
     let bodyReturn
     let user
 
+    const today = new Date()
 
+    dia = today.getDate()
+    mes = today.getMonth()
+
+    if(dia <10){
+        dia = '0' + dia 
+    }
+    if(mes <10){
+        mes = '0' + mes 
+    }
+    
+    const time = dia + '/' + mes + '/' + today.getFullYear()
+    
     if(!email || !password){// verifica se email e password foram digitados
         bodyReturn = {
             registered: false,
@@ -89,8 +102,8 @@ router.post('/register', async (req,res)=>{
             res.send(bodyReturn)
             return
         }
-
-        user = await User.create({email: email, password: password})// cria um novo usuário com o email e senha que foram passados
+        
+        user = await User.create({email: email, password: password,data:time})// cria um novo usuário com o email e senha que foram passados
         bodyReturn = {
             registered: !!user.id,
             id: user?.id,
@@ -100,7 +113,7 @@ router.post('/register', async (req,res)=>{
     }catch(error){
         console.log(`[POST API register] => `, error)
     }
-    
+    console.log(user)
     res.send(bodyReturn)
 })
 
@@ -169,6 +182,22 @@ router.post('/saveImage', type,  async (req,res) => {
     
 })
 
+router.get('/notifications', async (req,res)=>{
+
+    const body = req.query
+
+    try{
+        const decoded = jwt.verify(body.token,secret)
+        result = await User.findById(decoded.id)// procura o usuário pelo id e faz e atualiza a imagem passando obj
+     }catch(error){
+         console.log(`[POST API register] => `, error)
+     }
+
+     
+     console.log("notificações carregadas")
+     res.send(result.notifications)
+
+})
 
 
 module.exports = router
