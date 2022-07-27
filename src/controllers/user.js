@@ -75,7 +75,7 @@ router.post('/register', async (req,res)=>{
         dia = '0' + dia 
     }
     if(mes <10){
-        mes = '0' + mes 
+        mes = '0' + (mes+1) 
     }
     
     const time = dia + '/' + mes + '/' + today.getFullYear()
@@ -113,7 +113,7 @@ router.post('/register', async (req,res)=>{
     }catch(error){
         console.log(`[POST API register] => `, error)
     }
-    console.log(user)
+
     res.send(bodyReturn)
 })
 
@@ -129,7 +129,7 @@ router.get('/profile', async (req,res)=>{
 
     result = await User.findById(decoded.id)// procura o usuário pelo id
     }catch(error){
-        console.log(`[POST API register] => `, error)
+        console.log(`[POST API profile] => `, error)
     }
     
     res.send(result)// envia os dados do usuário
@@ -138,21 +138,22 @@ router.get('/profile', async (req,res)=>{
 
 router.post('/edit', async (req,res)=>{
 
-    const {name,phone,mobile,token} = req.body// recebe os dados a serem modificados e o token
+    const {name,phone,mobile,system,token} = req.body// recebe os dados a serem modificados e o token
 
     const decoded = jwt.verify(token,secret)// decodifica o token
 
     let data = {
         name:  name,
         phone: phone,
-        mobile: mobile
+        mobile: mobile,
+        system: system    
     }// cria um array com os dados a serem modificados
 
     try{
 
     result = await User.findByIdAndUpdate(decoded.id,data)// procura o usúario pelo id e atualiza passando data
     }catch(error){
-            console.log(`[POST API register] => `, error)
+            console.log(`[POST API edit] => `, error)
     }
 
     res.send("Dados editados")
@@ -173,7 +174,7 @@ router.post('/saveImage', type,  async (req,res) => {
     try{
        result = await User.findByIdAndUpdate(decoded.id,obj)// procura o usuário pelo id e faz e atualiza a imagem passando obj
     }catch(error){
-        console.log(`[POST API register] => `, error)
+        console.log(`[POST API saveImage] => `, error)
     }
 
     await fs.unlinkSync(req.file.path) // apaga a imagem da pasta depois dela ser salva no banco
@@ -190,11 +191,9 @@ router.get('/notifications', async (req,res)=>{
         const decoded = jwt.verify(body.token,secret)
         result = await User.findById(decoded.id)// procura o usuário pelo id e faz e atualiza a imagem passando obj
      }catch(error){
-         console.log(`[POST API register] => `, error)
+         console.log(`[POST API notifications] => `, error)
      }
 
-     
-     console.log("notificações carregadas")
      res.send(result.notifications)
 
 })

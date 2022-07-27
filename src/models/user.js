@@ -9,6 +9,7 @@ const schema = mongoose.Schema({
 	mobile: String,
 	image:  Buffer,
 	data: String,
+	system: String,
 	notifications:[{
 		postID: String,
 		text: String

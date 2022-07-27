@@ -14,6 +14,7 @@ mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.5kxocpk.mongodb
     const cors = require('cors');
     const UsersController = require('./src/controllers/user')
     const PostsController = require('./src/controllers/post')
+    const CommentController = require('./src/controllers/comments')
    
 
     app.use(cors())
@@ -22,6 +23,7 @@ mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.5kxocpk.mongodb
 
     app.use(UsersController)
     app.use(PostsController)
+    app.use(CommentController)
 
     app.listen(PORT, () => {
         console.log(`API server is running on port ${PORT}`)

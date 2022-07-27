@@ -11,11 +11,9 @@ const schema = mongoose.Schema({
         id: String
     }],
     Comments:[{
-        PostedBy:{type:mongoose.Types.ObjectId,ref:"user"},
-        Data: String,
-        Text:String
+        Comment:{type:mongoose.Types.ObjectId,ref:"Comment"}
     }]
 
 })
-
+schema.index({Message:'text'})
 module.exports = mongoose.model("Post", schema)
